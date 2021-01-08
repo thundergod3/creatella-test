@@ -12,4 +12,14 @@
 		text-transform: capitalize;
 		text-align: center;
 	}
+
+	&__buttonSort {
+		display: flex;
+		align-items: center;
+		margin-top: 20px;
+	}
+
+	&__buttonSortContainer {
+		margin-left: 10px;
+	}
 }

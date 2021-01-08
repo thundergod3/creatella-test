@@ -10,17 +10,17 @@ interface Props {
 	product: ProductItemI;
 }
 
-const ProductItem = ({
-	product: { price, id, face, date, size },
-}: Props): JSX.Element => {
+const ProductItem = ({ product: { price, id, face, date, size } }: Props): JSX.Element => {
 	return (
-		<div className="product-item" key={id} style={{ fontSize: size }}>
-			<p>{face}</p>
+		<div className="product-item" key={id}>
+			<p style={{ fontSize: size }}>{face}</p>
 			<p>
 				$
-				{(price + "").substring(0, 1) +
-					"." +
-					(price + "").substring(1, (price + "").length)}
+				{price > 9
+					? (price + "").substring(0, (price + "").length - 1) +
+					  "." +
+					  (price + "").substring(1, (price + "").length)
+					: "0." + (price + "").substring(0, 1)}
 			</p>
 			<p>{timeDifference(new Date(date))}</p>
 		</div>

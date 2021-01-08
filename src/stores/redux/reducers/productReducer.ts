@@ -35,6 +35,11 @@ const productReducer = (state: ProductReducerI = initalState, action: any) =>
 				break;
 			}
 
+			case types.FETCH_PRODUCT_LIST_SORT_SUCCEEDED: {
+				draft.productList = action.productList;
+				break;
+			}
+
 			default:
 				break;
 		}
