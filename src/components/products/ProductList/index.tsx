@@ -16,15 +16,20 @@ import ButtonSort from "../../utils/ButtonSort";
 
 const ProductList = (): JSX.Element => {
 	const {
-		productReducer: { productList, dataLoadMore },
+		productReducer: { productList, dataLoadMore, statusSort, pageNumberSort },
 		utilReducer: { loading },
 	} = useSelector((state: RootReducerI) => state);
+	const [pageNumber, setPageNumber] = useState<number>(1);
+	const [tempPageNumberSort, setTempPageNumberSort] = useState<number>(
+		pageNumberSort
+	);
 	const productListRef = useRef<any>(null);
-	const { fetchProductListPerPageRequest, fetchProductListSortRequest } = productAction;
+	const {
+		fetchProductListPerPageRequest,
+		fetchProductListSortRequest,
+	} = productAction;
 	const { loadingMoreUI, loadingUI } = utilAction;
 	const dispatch = useDispatch();
-
-	let pageNumber: number = 1;
 
 	const handleSortProductList = (sortName: string): void => {
 		dispatch(loadingUI());
@@ -38,8 +43,18 @@ const ProductList = (): JSX.Element => {
 				(window.scrollY + window.innerHeight) <=
 			50
 		) {
-			dispatch(loadingMoreUI());
-			dispatch(fetchProductListPerPageRequest(++pageNumber, true));
+			setPageNumber((prevState: number): number => prevState + 1);
+		}
+	};
+
+	const handleScrollSort = () => {
+		if (
+			productListRef.current.clientHeight +
+				productListRef.current.offsetTop -
+				(window.scrollY + window.innerHeight) <=
+			50
+		) {
+			setTempPageNumberSort((preState: number): number => preState + 1);
 		}
 	};
 
@@ -48,7 +63,18 @@ const ProductList = (): JSX.Element => {
 	}, []);
 
 	useEffect(() => {
-		if (productList.length !== 500) window.addEventListener("scroll", handleScroll);
+		if (pageNumber > 1) {
+			dispatch(loadingMoreUI());
+			dispatch(fetchProductListPerPageRequest(pageNumber, true));
+		}
+	}, [pageNumber]);
+
+	useEffect(() => {
+		if (!statusSort && productList.length !== 500) {
+			window.addEventListener("scroll", handleScroll);
+		} else {
+			window.addEventListener("scroll", handleScrollSort);
+		}
 
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, [productList]);
@@ -66,12 +92,26 @@ const ProductList = (): JSX.Element => {
 			</div>
 			{!productList.length || loading ? (
 				<img src={loadingGif} alt="...Loading" style={{ width: "100%" }} />
+			) : !statusSort ? (
+				productList.map(
+					(product: ProductItemI): JSX.Element => (
+						<ProductItem product={product} />
+					)
+				)
 			) : (
-				productList.map((product: ProductItemI): JSX.Element => <ProductItem product={product} />)
+				[...productList]
+					.splice(0, 15 * tempPageNumberSort)
+					.map(
+						(product: ProductItemI): JSX.Element => (
+							<ProductItem product={product} />
+						)
+					)
 			)}
 			{!dataLoadMore.length ||
 				(productList.length === 500 && (
-					<p style={{ textAlign: "center", marginTop: 35 }}>~ end of catalogue ~</p>
+					<p style={{ textAlign: "center", marginTop: 35 }}>
+						~ end of catalogue ~
+					</p>
 				))}
 		</div>
 	);

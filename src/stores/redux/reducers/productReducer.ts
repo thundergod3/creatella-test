@@ -15,11 +15,15 @@ type ProductListI = Array<ProductItemI>;
 interface ProductReducerI {
 	productList: ProductListI;
 	dataLoadMore: ProductListI;
+	statusSort: boolean;
+	pageNumberSort: number;
 }
 
 const initalState: ProductReducerI = {
 	productList: [],
 	dataLoadMore: [],
+	statusSort: false,
+	pageNumberSort: 1,
 };
 
 const productReducer = (state: ProductReducerI = initalState, action: any) =>
@@ -37,6 +41,8 @@ const productReducer = (state: ProductReducerI = initalState, action: any) =>
 
 			case types.FETCH_PRODUCT_LIST_SORT_SUCCEEDED: {
 				draft.productList = action.productList;
+				draft.statusSort = true;
+				draft.pageNumberSort = 1;
 				break;
 			}
 
