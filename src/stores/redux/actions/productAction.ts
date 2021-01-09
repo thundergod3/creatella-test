@@ -10,10 +10,14 @@ class productAction {
 			loadMore,
 		};
 	};
-	fetchProductListPerPageSucceeded = (productList: ProductListI): types.FetchProductListPerPageI => {
+	fetchProductListPerPageSucceeded = (
+		productList: ProductListI,
+		randomNumber?: number
+	): types.FetchProductListPerPageI => {
 		return {
 			type: types.FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED,
 			productList,
+			randomNumber,
 		};
 	};
 

@@ -14,20 +14,35 @@ import loadingGif from "../../../assets/loading.gif";
 import ProductItem from "../ProductItem";
 import ButtonSort from "../../utils/ButtonSort";
 
+interface SortItemI {
+	id: number;
+	title: string;
+}
+
+const sortListTile: Array<SortItemI> = [
+	{
+		id: 1,
+		title: "id",
+	},
+	{
+		id: 2,
+		title: "price",
+	},
+	{
+		id: 3,
+		title: "size",
+	},
+];
+
 const ProductList = (): JSX.Element => {
 	const {
 		productReducer: { productList, dataLoadMore, statusSort, pageNumberSort },
 		utilReducer: { loading },
 	} = useSelector((state: RootReducerI) => state);
 	const [pageNumber, setPageNumber] = useState<number>(1);
-	const [tempPageNumberSort, setTempPageNumberSort] = useState<number>(
-		pageNumberSort
-	);
+	const [tempPageNumberSort, setTempPageNumberSort] = useState<number>(pageNumberSort);
 	const productListRef = useRef<any>(null);
-	const {
-		fetchProductListPerPageRequest,
-		fetchProductListSortRequest,
-	} = productAction;
+	const { fetchProductListPerPageRequest, fetchProductListSortRequest } = productAction;
 	const { loadingMoreUI, loadingUI } = utilAction;
 	const dispatch = useDispatch();
 
@@ -70,14 +85,19 @@ const ProductList = (): JSX.Element => {
 	}, [pageNumber]);
 
 	useEffect(() => {
-		if (!statusSort && productList.length !== 500) {
+		if (!statusSort) {
 			window.addEventListener("scroll", handleScroll);
 		} else {
 			window.addEventListener("scroll", handleScrollSort);
 		}
 
-		return () => window.removeEventListener("scroll", handleScroll);
+		return () => {
+			window.removeEventListener("scroll", handleScroll);
+			window.removeEventListener("scroll", handleScrollSort);
+		};
 	}, [productList]);
+
+	console.log();
 
 	return (
 		<div className="product-list" ref={productListRef}>
@@ -85,34 +105,33 @@ const ProductList = (): JSX.Element => {
 			<div className="product-list__buttonSort">
 				<h4>Sort product list by</h4>
 				<div className="product-list__buttonSortContainer">
-					<ButtonSort title="id" handleChange={handleSortProductList} />
-					<ButtonSort title="price" handleChange={handleSortProductList} />
-					<ButtonSort title="size" handleChange={handleSortProductList} />
+					{sortListTile.map(
+						({ id, title }: SortItemI): JSX.Element => (
+							<ButtonSort id={id} title={title} handleChange={handleSortProductList} />
+						)
+					)}
 				</div>
 			</div>
 			{!productList.length || loading ? (
 				<img src={loadingGif} alt="...Loading" style={{ width: "100%" }} />
 			) : !statusSort ? (
 				productList.map(
-					(product: ProductItemI): JSX.Element => (
-						<ProductItem product={product} />
+					(product: ProductItemI, index: number): JSX.Element => (
+						<ProductItem product={product} index={index} />
 					)
 				)
 			) : (
 				[...productList]
 					.splice(0, 15 * tempPageNumberSort)
 					.map(
-						(product: ProductItemI): JSX.Element => (
-							<ProductItem product={product} />
+						(product: ProductItemI, index: number): JSX.Element => (
+							<ProductItem product={product} index={index} />
 						)
 					)
 			)}
-			{!dataLoadMore.length ||
-				(productList.length === 500 && (
-					<p style={{ textAlign: "center", marginTop: 35 }}>
-						~ end of catalogue ~
-					</p>
-				))}
+			{(!dataLoadMore.length || statusSort) && (
+				<p style={{ textAlign: "center", marginTop: 35 }}>~ end of catalogue ~</p>
+			)}
 		</div>
 	);
 };

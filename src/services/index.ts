@@ -5,20 +5,16 @@ class HTTPMethod {
 
 	constructor() {
 		this.axios = axios;
-		this.axios.defaults.baseURL = "http://localhost:3000";
+		this.axios.defaults.baseURL = "http://localhost:4000";
 	}
 
-	get = (url: string, remainProps?: any): Promise<any> =>
-		axios.get(url, remainProps);
+	get = (url: string, remainProps?: any): Promise<any> => axios.get(url, remainProps);
 
-	post = (url: string, remainProps?: any): Promise<any> =>
-		axios.post(url, remainProps);
+	post = (url: string, remainProps?: any): Promise<any> => axios.post(url, remainProps);
 
-	put = (url: string, remainProps?: any): Promise<any> =>
-		axios.put(url, remainProps);
+	put = (url: string, remainProps?: any): Promise<any> => axios.put(url, remainProps);
 
-	delete = (url: string, remainProps?: any): Promise<any> =>
-		axios.delete(url, remainProps);
+	delete = (url: string, remainProps?: any): Promise<any> => axios.delete(url, remainProps);
 }
 
 export default new HTTPMethod();

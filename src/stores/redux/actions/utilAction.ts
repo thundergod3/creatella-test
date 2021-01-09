@@ -1,4 +1,3 @@
-import { type } from "os";
 import * as types from "../../../constants/types";
 
 class utilAction {

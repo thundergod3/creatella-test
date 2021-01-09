@@ -8,15 +8,17 @@ interface ProductItemI {
 	price: number;
 	face: string;
 	date: Date;
+	image?: string;
 }
 
-type ProductListI = Array<ProductItemI>;
+type ProductListI = Array<ProductItemI | any>;
 
 interface ProductReducerI {
 	productList: ProductListI;
 	dataLoadMore: ProductListI;
 	statusSort: boolean;
 	pageNumberSort: number;
+	listRandomNumber: Array<number>;
 }
 
 const initalState: ProductReducerI = {
@@ -24,6 +26,7 @@ const initalState: ProductReducerI = {
 	dataLoadMore: [],
 	statusSort: false,
 	pageNumberSort: 1,
+	listRandomNumber: [],
 };
 
 const productReducer = (state: ProductReducerI = initalState, action: any) =>
@@ -31,6 +34,7 @@ const productReducer = (state: ProductReducerI = initalState, action: any) =>
 		switch (action.type) {
 			case types.FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED: {
 				draft.productList = action.productList;
+				draft.listRandomNumber.push(action.randomNumber);
 				break;
 			}
 

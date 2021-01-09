@@ -1,18 +1,13 @@
 import { ProductListI } from "../stores/redux/reducers/productReducer";
 
 // PRODUCT TYPES
-export const FETCH_PRODUCT_LIST_PER_PAGE_REQUEST: string =
-	"FETCH_PRODUCT_LIST_PER_PAGE_REQUEST";
-export const FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED: string =
-	"FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED";
+export const FETCH_PRODUCT_LIST_PER_PAGE_REQUEST: string = "FETCH_PRODUCT_LIST_PER_PAGE_REQUEST";
+export const FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED: string = "FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED";
 
-export const FETCH_PRODUCT_LIST_LOAD_MORE: string =
-	"FETCH_PRODUCT_LIST_LOAD_MORE";
+export const FETCH_PRODUCT_LIST_LOAD_MORE: string = "FETCH_PRODUCT_LIST_LOAD_MORE";
 
-export const FETCH_PRODUCT_LIST_SORT_REQUEST: string =
-	"FETCH_PRODUCT_LIST_SORT_REQUEST";
-export const FETCH_PRODUCT_LIST_SORT_SUCCEEDED: string =
-	"FETCH_PRODUCT_LIST_SORT_SUCCEEDED";
+export const FETCH_PRODUCT_LIST_SORT_REQUEST: string = "FETCH_PRODUCT_LIST_SORT_REQUEST";
+export const FETCH_PRODUCT_LIST_SORT_SUCCEEDED: string = "FETCH_PRODUCT_LIST_SORT_SUCCEEDED";
 
 // UTIL TYPES
 export const LOADING_UI: string = "LOADING_UI";
@@ -30,6 +25,7 @@ interface FetchProductListPerPageRequestI {
 interface FetchProductListPerPageSucceededI {
 	type: typeof FETCH_PRODUCT_LIST_PER_PAGE_SUCCEEDED;
 	productList: ProductListI;
+	randomNumber?: number;
 }
 
 interface FetchProductListLoadMore {
@@ -45,7 +41,6 @@ interface FetchProductListSortSucceeded {
 	type: typeof FETCH_PRODUCT_LIST_SORT_SUCCEEDED;
 	productList: ProductListI;
 }
-
 // UTIL ACTION TYPES
 interface LoadingUII {
 	type: typeof LOADING_UI;
@@ -61,13 +56,9 @@ interface LoadedMoreUII {
 	type: typeof LOADED_MORE_UI;
 }
 
-export type FetchProductListPerPageI =
-	| FetchProductListPerPageRequestI
-	| FetchProductListPerPageSucceededI;
+export type FetchProductListPerPageI = FetchProductListPerPageRequestI | FetchProductListPerPageSucceededI;
 export type { FetchProductListLoadMore };
-export type FetchProductListSort =
-	| FetchProductListSortRequest
-	| FetchProductListSortSucceeded;
+export type FetchProductListSort = FetchProductListSortRequest | FetchProductListSortSucceeded;
 
 export type LoadMoreUII = LoadingMoreUII | LoadedMoreUII;
 export type LoadUII = LoadingUII | LoadedUII;

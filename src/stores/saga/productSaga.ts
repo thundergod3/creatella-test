@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest, call, put, delay, select } from "redux-saga/effects";
+import { takeLatest, call, put, select } from "redux-saga/effects";
 
 import * as types from "../../constants/types";
 import { RootReducerI } from "../rootReducer";
@@ -7,6 +7,7 @@ import productService from "../../services/productService";
 
 import productAction from "../redux/actions/productAction";
 import utilAction from "../redux/actions/utilAction";
+import { ProductItemI, ProductListI } from "../redux/reducers/productReducer";
 
 function* fetchProductListPerPage({ page, loadMore }: any) {
 	try {
@@ -22,11 +23,30 @@ function* fetchProductListPerPage({ page, loadMore }: any) {
 			yield put(productAction.fetchProductListLoadMore(dataLoadMore));
 		} else {
 			const {
-				productReducer: { productList, dataLoadMore },
-				utilReducer: { loadMore },
+				productReducer: { productList, dataLoadMore, listRandomNumber },
 			} = yield select((state: RootReducerI) => state);
 
-			yield put(productAction.fetchProductListPerPageSucceeded([...productList, ...dataLoadMore]));
+			let tempRandomNumber: number = Math.floor(Math.random() * 1000);
+
+			while (true) {
+				if (listRandomNumber.includes(tempRandomNumber)) {
+					tempRandomNumber = Math.floor(Math.random() * 1000);
+				} else {
+					break;
+				}
+			}
+
+			const productListAfterInsertAds: ProductListI = [...productList, ...dataLoadMore].map(
+				(product: ProductItemI, index: number) => {
+					if (index !== 0 && index % 20 === 0 && !product.image) {
+						return {
+							...product,
+							image: `https://unsplash.it/320/200?image=${tempRandomNumber}`,
+						};
+					} else return product;
+				}
+			);
+			yield put(productAction.fetchProductListPerPageSucceeded(productListAfterInsertAds, tempRandomNumber));
 			const { data: dataMore }: any = yield call(productService.fetchProductListPerPage, {
 				page: page + 1,
 			});
